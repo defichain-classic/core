@@ -175,6 +175,11 @@ var (
 		Usage:    "MintMe.com Coin mainnet: pre-configured MintMe.com Coin mainnet",
 		Category: flags.EthCategory,
 	}
+	DefiChainFlag = &cli.BoolFlag{
+		Name:     "defichain",
+		Usage:    "Defichain Classic mainnet",
+		Category: flags.EthCategory,
+	}
 	MordorFlag = &cli.BoolFlag{
 		Name:     "mordor",
 		Usage:    "Mordor network: Ethereum Classic's cross-client proof-of-work test network",
@@ -1119,6 +1124,7 @@ var (
 		MainnetFlag,
 		ClassicFlag,
 		MintMeFlag,
+		DefiChainFlag,
 	}, TestnetFlags...)
 
 	// DatabasePathFlags is the flag group of all database path flags.
@@ -1191,6 +1197,8 @@ func setBootstrapNodes(ctx *cli.Context, cfg *p2p.Config) {
 		urls = params.ClassicBootnodes
 	case ctx.Bool(MintMeFlag.Name):
 		urls = params.MintMeBootnodes
+	case ctx.Bool(DefiChainFlag.Name):
+		urls = params.DefiChainBootNodes
 	case ctx.Bool(MordorFlag.Name):
 		urls = params.MordorBootnodes
 	case ctx.Bool(SepoliaFlag.Name):
@@ -1232,6 +1240,8 @@ func setBootstrapNodesV5(ctx *cli.Context, cfg *p2p.Config) {
 		urls = params.GoerliBootnodes
 	case ctx.Bool(MintMeFlag.Name):
 		urls = params.MintMeBootnodes
+	case ctx.Bool(DefiChainFlag.Name):
+		urls = params.DefiChainBootNodes
 	case cfg.BootstrapNodesV5 != nil:
 		return // already set, don't apply defaults.
 	}
@@ -1702,6 +1712,8 @@ func dataDirPathForCtxChainConfig(ctx *cli.Context, baseDataDirPath string) stri
 		return filepath.Join(baseDataDirPath, "sepolia")
 	case ctx.Bool(MintMeFlag.Name):
 		return filepath.Join(baseDataDirPath, "mintme")
+	case ctx.Bool(DefiChainFlag.Name):
+		return filepath.Join(baseDataDirPath, "defichain-classic")
 	}
 	return baseDataDirPath
 }
@@ -1952,7 +1964,7 @@ func CheckExclusive(ctx *cli.Context, args ...interface{}) {
 // SetEthConfig applies eth-related command line flags to the config.
 func SetEthConfig(ctx *cli.Context, stack *node.Node, cfg *ethconfig.Config) {
 	// Avoid conflicting network flags
-	CheckExclusive(ctx, MainnetFlag, DeveloperFlag, DeveloperPoWFlag, GoerliFlag, SepoliaFlag, ClassicFlag, MordorFlag, MintMeFlag)
+	CheckExclusive(ctx, MainnetFlag, DeveloperFlag, DeveloperPoWFlag, GoerliFlag, SepoliaFlag, ClassicFlag, MordorFlag, MintMeFlag, DefiChainFlag)
 	CheckExclusive(ctx, LightServeFlag, SyncModeFlag, "light")
 	CheckExclusive(ctx, DeveloperFlag, DeveloperPoWFlag, ExternalSignerFlag) // Can't use both ephemeral unlocked and external signer
 	if ctx.String(GCModeFlag.Name) == "archive" && ctx.Uint64(TxLookupLimitFlag.Name) != 0 {
@@ -2511,6 +2523,8 @@ func genesisForCtxChainConfig(ctx *cli.Context) *genesisT.Genesis {
 		genesis = params.DefaultGoerliGenesisBlock()
 	case ctx.Bool(MintMeFlag.Name):
 		genesis = params.DefaultMintMeGenesisBlock()
+	case ctx.Bool(DefiChainFlag.Name):
+		genesis = params.DefaultDefiChainGenesisBlock()
 	case ctx.Bool(DeveloperFlag.Name):
 		Fatalf("Developer chains are ephemeral")
 	}
@@ -2542,7 +2556,7 @@ func MakeChain(ctx *cli.Context, stack *node.Node, readonly bool) (*core.BlockCh
 	}
 
 	var lyra2Config *lyra2.Config
-	if ctx.Bool(MintMeFlag.Name) {
+	if ctx.Bool(MintMeFlag.Name) || ctx.Bool(DefiChainFlag.Name) {
 		lyra2Config = &lyra2.Config{}
 	}
 

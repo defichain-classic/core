@@ -118,11 +118,11 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *trie.Database, gen
 	stored := rawdb.ReadCanonicalHash(db, 0)
 	if (stored == common.Hash{}) {
 		if genesis == nil {
-			log.Info("Writing default main-net genesis block")
-			log.Warn("Not specifying a chain flag is deprecated and will be removed in the future, please use --mainnet for Ethereum mainnet")
-			genesis = params.DefaultGenesisBlock()
+			log.Warn("Not specifying a chain flag is deprecated, please use --defichain for Defichain Classic mainnet")
+			return nil, common.Hash{}, errors.New("please use --defichain flag to start the client")
 		} else {
-			log.Info("Writing custom genesis block")
+			hash := GenesisToBlock(genesis, nil).Hash()
+			log.Info("Writing custom genesis block", "HASH", hash.String())
 		}
 
 		block, err := CommitGenesis(genesis, db, triedb)
@@ -130,7 +130,7 @@ func SetupGenesisBlockWithOverride(db ethdb.Database, triedb *trie.Database, gen
 			return genesis.Config, common.Hash{}, err
 		}
 		applyOverrides(genesis.Config)
-		log.Info("Wrote genesis block OK", "config", genesis.Config)
+		log.Info("Wrote genesis block OK", "config", genesis.Config, "hash", block.Hash().String())
 		return genesis.Config, block.Hash(), nil
 	}
 	// We have the genesis block in database(perhaps in ancient database)
@@ -269,6 +269,7 @@ func LoadCliqueConfig(db ethdb.Database, genesis *genesisT.Genesis) (*ctypes.Cli
 }
 
 func configOrDefault(g *genesisT.Genesis, ghash common.Hash) ctypes.ChainConfigurator {
+	log.Info("configOrDefault", "actual hash", ghash)
 	switch {
 	case g != nil:
 		return g.Config
@@ -282,6 +283,8 @@ func configOrDefault(g *genesisT.Genesis, ghash common.Hash) ctypes.ChainConfigu
 		return params.SepoliaChainConfig
 	case ghash == params.MintMeGenesisHash:
 		return params.MintMeChainConfig
+	case ghash == params.DefiChainGenesisHash:
+		return params.DefiChainConfig
 	default:
 		return params.AllEthashProtocolChanges
 	}
@@ -381,6 +384,8 @@ func CommitGenesisState(db ethdb.Database, hash common.Hash) error {
 			genesis = params.DefaultMordorGenesisBlock()
 		case params.MintMeGenesisHash:
 			genesis = params.DefaultMintMeGenesisBlock()
+		case params.DefiChainGenesisHash:
+			genesis = params.DefaultDefiChainGenesisBlock()
 		}
 		if genesis != nil {
 			alloc = genesis.Alloc
