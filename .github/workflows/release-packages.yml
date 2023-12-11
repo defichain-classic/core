@@ -120,4 +120,4 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           draft: true
-          files: core-geth*.zip*
+          files: defichain-classic*.zip*
