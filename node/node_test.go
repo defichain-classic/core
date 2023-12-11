@@ -173,7 +173,7 @@ func TestRegisterProtocols_OpenRPC_HTTP(t *testing.T) {
 	}
 	defer stack.Close()
 
-	client, err := rpc.Dial("http://localhost:8545")
+	client, err := rpc.Dial("http://localhost:7545")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -263,7 +263,7 @@ func TestOpenRPCMetaSchemaSpec(t *testing.T) {
 	}
 	defer stack.Close()
 
-	client, err := rpc.Dial("http://localhost:8545")
+	client, err := rpc.Dial("http://localhost:7545")
 	if err != nil {
 		t.Fatal(err)
 	}
