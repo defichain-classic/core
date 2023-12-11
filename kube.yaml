@@ -1,0 +1,74 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: defichain-classic-geth
+spec:
+  selector:
+    app: defichain-classic-geth
+  ports:
+    - protocol: TCP
+      name: port1
+      port: 7545
+      targetPort: 7545
+    - protocol: TCP
+      name: port2
+      port: 7546
+      targetPort: 7546
+    - protocol: TCP
+      name: port3
+      port: 30303
+      targetPort: 30303
+    - protocol: UDP
+      name: port4
+      port: 30303
+      targetPort: 30303
+--
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: defichain-classic-geth
+spec:
+  serviceName: defichain-classic-geth
+  replicas: 1 # Scale as match as you want
+  revisionHistoryLimit: 1
+  selector:
+    matchLabels:
+      app: defichain-classic-geth
+  template:
+    metadata:
+      labels:
+        app: defichain-classic-geth
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: defichain-classic-geth
+          image: ghcr.io/defichain-classic/core:main
+          volumeMounts:
+            - name: defichain-classic-geth
+              mountPath: /data
+  volumeClaimTemplates:
+    - metadata:
+        name: defichain-classic-geth
+      spec:
+        accessModes: [ "ReadWriteOnce" ]
+        storageClassName: vultr-block-storage
+        resources:
+          requests:
+            storage: 20Gi
+--
+apiVersion: cert-manager.io/v1
+kind: ClusterIssuer
+metadata:
+  name: letsencrypt-prod
+  labels:
+    name: letsencrypt-prod
+spec:
+  acme:
+    email: opensource@defichain-classic.com
+    privateKeySecretRef:
+      name: letsencrypt-prod
+    server: https://acme-v02.api.letsencrypt.org/directory
+    solvers:
+    - http01:
+        ingress:
+          class: nginx
