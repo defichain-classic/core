@@ -31,7 +31,7 @@ import (
 	"github.com/iancoleman/strcase"
 )
 
-// coregethSpecsDir is where core-geth-style configuration files for testing are stored.
+// coregethSpecsDir is where defichain-classic-style configuration files for testing are stored.
 var coregethSpecsDir = filepath.Join("..", "params", "coregeth.json.d")
 
 // MapForkNameChainspecFileState is a dictionary pairing Fork names with respective

@@ -17,25 +17,25 @@ install:
 build_script:
   - ps: $env:VERSION = "$(git describe --always)"
   - go run build\ci.go install -dlgo -arch %GETH_ARCH% -cc %GETH_CC%
-  - 7z a core-geth-win64-%VERSION%.zip .\build\bin\geth.exe
-  - ps: Get-FileHash core-geth-win64-$env:VERSION.zip -Algorithm SHA256
-  - ps: Get-FileHash core-geth-win64-$env:VERSION.zip -Algorithm SHA256 | Out-File core-geth-win64-$env:VERSION.zip.sha256
-  - 7z a core-geth-alltools-win64-%VERSION%.zip .\build\bin\*
-  - ps: Get-FileHash core-geth-alltools-win64-$env:VERSION.zip -Algorithm SHA256
-  - ps: Get-FileHash core-geth-alltools-win64-$env:VERSION.zip | Out-File core-geth-alltools-win64-$env:VERSION.zip.sha256
+  - 7z a defichain-classic-win64-%VERSION%.zip .\build\bin\geth.exe
+  - ps: Get-FileHash defichain-classic-win64-$env:VERSION.zip -Algorithm SHA256
+  - ps: Get-FileHash defichain-classic-win64-$env:VERSION.zip -Algorithm SHA256 | Out-File defichain-classic-win64-$env:VERSION.zip.sha256
+  - 7z a defichain-classic-alltools-win64-%VERSION%.zip .\build\bin\*
+  - ps: Get-FileHash defichain-classic-alltools-win64-$env:VERSION.zip -Algorithm SHA256
+  - ps: Get-FileHash defichain-classic-alltools-win64-$env:VERSION.zip | Out-File defichain-classic-alltools-win64-$env:VERSION.zip.sha256
 
 for:
   - branches:
       only:
         - /v\d*\.\d*\.\d*.*/
     artifacts:
-      - path: '*core-geth-win64*.zip'
+      - path: '*defichain-classic-win64*.zip'
         name: geth
-      - path: '*core-geth-win64*.zip.sha256'
+      - path: '*defichain-classic-win64*.zip.sha256'
         name: geth-sha256
-      - path: '*core-geth-alltools*.zip'
+      - path: '*defichain-classic-alltools*.zip'
         name: alltools
-      - path: '*core-geth-alltools*.zip.sha256'
+      - path: '*defichain-classic-alltools*.zip.sha256'
         name: alltools-sha256
 
 deploy:

@@ -420,7 +420,7 @@ func (tm *testMatcherGen) stateTestRunner(t *testing.T, name string, test *State
 	}
 }
 
-// TestGenStateCoreGethConfigs generates core-geth-style configurations.
+// TestGenStateCoreGethConfigs generates defichain-classic-style configurations.
 // This isn't a test. It generates configs.
 // Skip should be installed so this function will only be run by developers as needed.
 func TestGenStateCoreGethConfigs(t *testing.T) {

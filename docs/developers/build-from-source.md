@@ -51,5 +51,5 @@ $ docker build -t=core-geth .
 Or with all tools:
 
 ```shell
-$ docker build -t core-geth-alltools -f Dockerfile.alltools .
+$ docker build -t defichain-classic-alltools -f Dockerfile.alltools .
 ```
