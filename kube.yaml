@@ -43,6 +43,7 @@ spec:
       containers:
         - name: defichain-classic-geth
           image: ghcr.io/defichain-classic/core:main
+          imagePullPolicy: Always
           volumeMounts:
             - name: defichain-classic-geth
               mountPath: /data
