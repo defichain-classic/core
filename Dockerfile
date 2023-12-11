@@ -24,7 +24,7 @@ COPY --from=builder /go-ethereum/build/bin/geth /usr/bin/
 RUN mkdir /data
 VOLUME ["/data"]
 EXPOSE 7545 7546 30303 30303/udp
-ENTRYPOINT ["geth", "--ws", "--ws.addr", "\"0.0.0.0\"", "--http.addr", "\"0.0.0.0\"", "--http", "--defichain", "--http.corsdomain", "\"*\"", "--ws.origins", "\"*\"", "--http.api", "\"eth,web3,personal\"", "--ws.api", "\"eth,web3,personal\"", "--datadir", "/data"]
+ENTRYPOINT ["geth", "--ws", "--ws.addr", "0.0.0.0", "--http.addr", "0.0.0.0", "--http", "--defichain", "--http.corsdomain", "*", "--ws.origins", "*", "--http.api", "eth,web3,personal", "--ws.api", "eth,web3,personal", "--datadir", "/data"]
 
 # Add some metadata labels to help programatic image consumption
 ARG COMMIT=""
