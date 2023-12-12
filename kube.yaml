@@ -16,12 +16,12 @@ spec:
       targetPort: 7546
     - protocol: TCP
       name: port3
-      port: 30303
-      targetPort: 30303
+      port: 30309
+      targetPort: 30309
     - protocol: UDP
       name: port4
-      port: 30303
-      targetPort: 30303
+      port: 30309
+      targetPort: 30309
 --
 apiVersion: apps/v1
 kind: StatefulSet

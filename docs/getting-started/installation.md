@@ -24,7 +24,7 @@ One of the quickest ways to get Ethereum Classic up and running on your machine 
 $ docker run -d \
     --name core-geth \
     -v $LOCAL_DATADIR:/root \
-    -p 30303:30303 \
+    -p 30309:30309 \
     -p 8545:8545 \
     etclabscore/core-geth \
     --classic \
