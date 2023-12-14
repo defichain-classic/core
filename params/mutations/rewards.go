@@ -21,6 +21,7 @@ import (
 	"github.com/ethereum/go-ethereum/core/state"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/params"
+	"github.com/ethereum/go-ethereum/params/lyra_rewards"
 	"github.com/ethereum/go-ethereum/params/types/ctypes"
 )
 
@@ -34,6 +35,11 @@ var (
 // The total reward consists of the static block reward and rewards for
 // included uncles. The coinbase of each uncle block is also calculated.
 func GetRewards(config ctypes.ChainConfigurator, header *types.Header, uncles []*types.Header) (*big.Int, []*big.Int) {
+
+	if config.GetConsensusEngineType().IsLyra2() {
+		return lyra_rewards.Lyra2BlockReward(config, header, uncles)
+	}
+
 	if config.IsEnabled(config.GetEthashECIP1017Transition, header.Number) {
 		return ecip1017BlockReward(config, header, uncles)
 	}
