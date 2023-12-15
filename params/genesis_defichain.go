@@ -6,7 +6,7 @@ import (
 	"github.com/ethereum/go-ethereum/params/types/genesisT"
 )
 
-var DefiChainGenesisHash = common.HexToHash("0x49fab206bd26391d036121d239a7d95cec2b3b4747e65b61ffba1c67dae8b1c1")
+var DefiChainGenesisHash = common.HexToHash("0x107687ef26cd54744a0c60d8b1e88b28f1f768caeef8d0459b577cf47e8cccd4")
 
 func DefaultDefiChainGenesisBlock() *genesisT.Genesis {
 	return &genesisT.Genesis{
